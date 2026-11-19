@@ -59,12 +59,14 @@ main{padding:0 16px 40px;margin-top:-30px;position:relative}
 .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .rms{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.rms label{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;font-size:14px}
 .cg .d.part{background:linear-gradient(135deg,rgba(180,83,9,.7),rgba(11,48,71,.9))}
+.tbtn{position:absolute;z-index:3;top:calc(env(safe-area-inset-top) + 14px);right:14px;display:flex;gap:6px}.tbtn a{background:rgba(6,38,59,.55);color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 11px;font-size:13px;font-weight:700;backdrop-filter:blur(6px)}#hs{align-items:center;padding:16px}#hs .sh-in{border-radius:22px;max-height:86vh}
 small{color:#7dd3fc}
 </style></head><body>
 <div id="gate" style="position:fixed;inset:0;z-index:99;background:#06263b;display:grid;place-items:center"><form id="gf" style="text-align:center;color:#fff;font-family:system-ui"><div style="font-size:48px">🎣</div><h2 style="margin:6px 0">Port O'Connor</h2><p style="color:#7dd3fc">Enter the family code</p><input id="gp" type="password" inputmode="numeric" autocomplete="off" style="font-size:24px;padding:12px;border-radius:12px;border:0;width:170px;text-align:center"><br><button style="margin-top:12px;padding:12px 28px;border-radius:12px;border:0;background:#fb923c;font-weight:800;font-size:17px">Open</button><p id="ge" style="color:#fca5a5"></p></form></div>
 <script>(()=>{const H='bd2558c964022bad9c4f212d67085ef52e02c6cf04e091f71d7f671587d9e7b9',g=document.getElementById('gate');if(localStorage.getItem('poc.ok')===H){g.remove();return;}document.getElementById('gf').onsubmit=async e=>{e.preventDefault();const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('poc:'+document.getElementById('gp').value));const h=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');if(h===H){localStorage.setItem('poc.ok',h);g.remove();}else document.getElementById('ge').textContent='Not quite. Ask Nathan for the code.';};})();</script>
 
 <div class="sky"><div class="sun"></div>
+  <div class="tbtn"><a href="#" id="a2hs">📲 Get the app</a><a href="#" id="shr">💬 Share</a></div>
   <div class="kick" id="kick">Live</div><h1 id="h1">…</h1><div class="sub" id="sub">Checking the water…</div>
   <div class="waves">
     <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 60 Q150 20 300 60 T600 60 T900 60 T1200 60 V120 H0Z" fill="#0b4f73"/></svg>
@@ -250,4 +252,28 @@ async function loadMonth() {
     $('moD').querySelectorAll('[data-bb]').forEach(x => x.onclick = () => openCal(x.dataset.bb, d.date)); });
 }
 loadBookings().then(loadMonth); loadWeekend();
-</script></body></html>
+</script><div id="hs" class="sheet"><div class="sh-in" style="max-width:520px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:10px"><img src="icon-180.png" alt="" style="width:48px;height:48px;border-radius:12px"><b style="font-size:20px;flex:1">Put Port O'Connor on your phone</b><button class="x" id="hsX">✕</button></div>
+  <button class="bk" id="hsI" style="display:none">📲 Install the app</button>
+  <div id="hsIOS" style="margin-top:12px;font-size:15px;line-height:1.6"><b>iPhone</b> (in Safari)<ol style="margin:4px 0 10px;padding-left:22px">
+    <li>Tap the <b>three lines</b> <svg width="20" height="14" viewBox="0 0 20 14" style="vertical-align:-1px"><path d="M1 2h18M1 7h14M1 12h10" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg> at the left of the web address at the bottom</li>
+    <li>Tap <b>Share</b> <span style="opacity:.8">(square with an ↑ arrow)</span></li>
+    <li>Scroll down, tap <b>Add to Home Screen</b>, then <b>Add</b></li></ol>
+    <small>Opened from a text? Tap the link so it opens in Safari first.</small></div>
+  <div id="hsAnd" style="margin-top:12px;font-size:15px;line-height:1.6"><b>Android</b> (in Chrome)<ol style="margin:4px 0 10px;padding-left:22px">
+    <li>Tap the <b>⋮</b> menu (top right)</li><li>Tap <b>Add to Home screen</b> or <b>Install app</b></li><li>Tap <b>Install</b> / <b>Add</b></li></ol></div>
+  <small>Enter the family code 2323 one more time the first time you open the app.</small>
+</div></div>
+<script>(() => {
+  const $ = id => document.getElementById(id), standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  $('shr').onclick = e => { e.preventDefault(); const msg = "Port O'Connor: fishing forecast, tides + barn calendar. Family code 2323 " + String.fromCharCode(10) + "https://n8ilab.github.io/port-oconnor/?v=2";
+    location.href = (/iPhone|iPad|iPod|Mac/.test(navigator.userAgent) ? 'sms:&body=' : 'sms:?body=') + encodeURIComponent(msg); };
+  if (standalone) { $('a2hs').style.display = 'none'; return; }
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua), and = /Android/.test(ua);
+  if (ios) $('hsAnd').style.display = 'none'; if (and) $('hsIOS').style.display = 'none';
+  let ev = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); ev = e; $('hsI').style.display = 'block'; });
+  $('hsI').onclick = async () => { if (ev) { ev.prompt(); await ev.userChoice; ev = null; $('hs').classList.remove('on'); } };
+  $('a2hs').onclick = e => { e.preventDefault(); $('hs').classList.add('on'); };
+  $('hsX').onclick = () => $('hs').classList.remove('on'); $('hs').onclick = e => { if (e.target.id === 'hs') $('hs').classList.remove('on'); };
+})();</script>
+</body></html>
