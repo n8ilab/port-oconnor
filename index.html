@@ -55,6 +55,7 @@ main{padding:0 16px 40px;margin-top:-30px;position:relative}
 .mo .d .mn{position:absolute;top:3px;right:3px;font-size:10px}.mo .dots{position:absolute;bottom:4px;left:4px;display:flex;gap:3px}
 .mo .dots i{width:9px;height:9px;border-radius:50%;border:1.5px solid #06263b}.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:#bae6fd;margin-top:8px}
 .mo .d.past{opacity:.38}.mb{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:10px;width:40px;height:34px;font-size:20px}.mb:disabled{opacity:.3}
+.mbk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.mbk button{border:2px solid;background:rgba(255,255,255,.08);color:#fff;border-radius:12px;padding:11px 6px;font-weight:800;font-size:14px}.mbk button:disabled{opacity:.45}
 .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .rms{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.rms label{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;font-size:14px}
 .cg .d.part{background:linear-gradient(135deg,rgba(180,83,9,.7),rgba(11,48,71,.9))}
@@ -82,7 +83,7 @@ small{color:#7dd3fc}
     <div class="mo" id="mo">Loading…</div>
     <div class="leg"><span><i style="background:#22c55e"></i>Great</span><span><i style="background:#84cc16"></i>Good</span><span><i style="background:#facc15"></i>Fair</span><span><i style="background:#f97316"></i>Slow</span>
       <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>Kays/Creek booked</span></div>
-    <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. Tap a day for details. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
+    <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. Tap a day for details and to book it. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
   <div style="text-align:center;margin-top:22px">
     <div style="font-weight:900;letter-spacing:.5px;color:#f97316;font-size:17px">Built by N8</div>
     <svg width="90" height="22" viewBox="0 0 90 22" style="display:block;margin:4px auto"><path d="M4 7 Q15.5 1 27 7 T50 7 T73 7 T86 7" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M4 16 Q15.5 10 27 16 T50 16 T73 16 T86 16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
@@ -171,7 +172,8 @@ async function loadWeekend() {
 // calendar sheet
 let BARN = 'les', MONTH = new Date(), SEL = [];
 const iso = d => new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
-function openCal(b) { BARN = b; SEL = []; MONTH = new Date(); MONTH.setDate(1); $('calT').textContent = (BK.barns[b] || b); drawCal(); $('cal').classList.add('on');
+function openCal(b, day) { BARN = b; SEL = day ? [day] : []; MONTH = day ? new Date(day + 'T12:00') : new Date(); MONTH.setDate(1); $('calT').textContent = (BK.barns[b] || b); drawCal();
+  $('sel').textContent = day ? `From ${fmtD(day)}: tap your last night (or send it as one night).` : 'Tap your first night, then your last night.'; $('cal').classList.add('on');
   $('bName').value = localStorage.getItem('poc.name') || '';
   const RR = (BK.rooms || {})[b] || {}; $('rms').innerHTML = Object.keys(RR).length ? '<span class="s" style="width:100%">Which rooms?</span>' + Object.entries(RR).map(([k, v]) => `<label><input type="checkbox" value="${k}"> ${v}</label>`).join('') : ''; }
 const selRooms = () => { const RR = Object.keys((BK.rooms || {})[BARN] || {}); if (!RR.length) return []; const c = [...document.querySelectorAll('#rms input:checked')].map(x => x.value); return c.length ? c : null; };
@@ -241,7 +243,11 @@ async function loadMonth() {
     $('moD').innerHTML = `<b>${fmtD(d.date)}: ${d.label || '?'} bite</b>${d.score != null ? ' (' + d.score + ')' : ''} · ${d.phase || ''} ${Math.round((d.illum || 0) * 100)}%`
       + (d.best && d.best.length ? `<br>⏰ Best: ${d.best.map(x => clock(x[0]) + '–' + clock(x[1])).join(', ')}` : '')
       + (d.majors ? `<br>⭐ Majors ${d.majors.map(clock).join(' & ')}` : '') + (d.wx ? `<br>🌤 ${d.wx.hi}° ${d.wx.short} · ${d.wx.wind}` : '')
-      + `<br>🏠 ${bk.length ? bk.map(b => `<span style="color:${BC[b.barn]}">●</span> ${b.name} @ ${(BK.barns[b.barn] || b.barn)}${rmTxt(b)}`).join(', ') : 'Both barns open'}`; });
+      + `<br>🏠 ${bk.length ? bk.map(b => `<span style="color:${BC[b.barn]}">●</span> ${b.name} @ ${(BK.barns[b.barn] || b.barn)}${rmTxt(b)}`).join(', ') : 'Both barns open'}`
+      + (d.date >= todayS ? '<div class="mbk">' + Object.keys(BK.barns || {}).map(k => { const RR = Object.keys((BK.rooms || {})[k] || {}), l = bk.filter(b => b.barn === k);
+          const full = RR.length ? RR.every(r => l.some(b => !(b.rooms && b.rooms.length) || b.rooms.includes(r))) : l.length > 0;
+          return `<button data-bb="${k}" ${full ? 'disabled' : ''} style="border-color:${BC[k]}">${full ? 'Booked: ' : '📅 Book '}${BK.barns[k]}</button>`; }).join('') + '</div>' : '');
+    $('moD').querySelectorAll('[data-bb]').forEach(x => x.onclick = () => openCal(x.dataset.bb, d.date)); });
 }
 loadBookings().then(loadMonth); loadWeekend();
 </script></body></html>
