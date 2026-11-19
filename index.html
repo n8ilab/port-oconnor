@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Port O'Connor</title><meta name="theme-color" content="#0b3d5c">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,"Segoe UI",system-ui,sans-serif;color:#f0f9ff;background:#06263b;min-height:100vh;overflow-x:hidden}
+.sky{position:relative;padding:calc(env(safe-area-inset-top) + 26px) 20px 120px;background:linear-gradient(180deg,#f6b26b 0%,#f08a5d 22%,#7aa5d2 55%,#2a6f97 100%);overflow:hidden}
+.sun{position:absolute;right:-30px;top:40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#fff6d5 0%,#ffd27a 45%,rgba(255,180,90,0) 70%);animation:glow 6s ease-in-out infinite}
+@keyframes glow{50%{transform:scale(1.06)}}
+.kick{font-size:12px;letter-spacing:3px;font-weight:800;color:#fff8;text-transform:uppercase}
+h1{font-size:34px;margin:6px 0 2px;text-shadow:0 2px 14px #0005}.sub{color:#fffd;font-size:15px}
+.waves{position:absolute;left:0;right:0;bottom:-2px;height:120px}
+.waves svg{position:absolute;bottom:0;width:200%;height:100%;animation:sway 9s linear infinite}.waves svg:nth-child(2){animation-duration:13s;opacity:.6}.waves svg:nth-child(3){animation-duration:17s;opacity:.4}
+@keyframes sway{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+main{padding:0 16px 40px;margin-top:-30px;position:relative}
+.play{width:100%;border:0;border-radius:22px;padding:18px;font-size:19px;font-weight:800;color:#06263b;background:linear-gradient(135deg,#fde68a,#fb923c);box-shadow:0 12px 30px #0006;display:flex;align-items:center;justify-content:center;gap:12px}
+.play .bars{display:flex;gap:3px;height:20px;align-items:flex-end}.play .bars i{width:4px;background:#06263b;border-radius:2px;height:30%}
+.playing .bars i{animation:eq .8s ease-in-out infinite}.playing .bars i:nth-child(2){animation-delay:.2s}.playing .bars i:nth-child(3){animation-delay:.4s}.playing .bars i:nth-child(4){animation-delay:.1s}
+@keyframes eq{50%{height:100%}}
+.talk{display:block;text-align:center;margin-top:10px;border-radius:22px;padding:15px;font-size:17px;font-weight:800;color:#f0f9ff;text-decoration:none;background:#0e7490;border:1px solid #67e8f9}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.c{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:13px 14px}
+.c .l{font-size:11px;letter-spacing:1.5px;color:#7dd3fc;font-weight:800;text-transform:uppercase}.c .v{font-size:30px;font-weight:800;margin-top:2px}.c .s{font-size:13px;color:#bae6fd}
+.wide{grid-column:1/-1}.arrow{display:inline-block;transition:transform 1s}
+#tide{width:100%;height:120px;margin-top:6px}
+.note{background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(251,146,60,.12));border-color:#fcd34d55}
+.home li{margin:4px 0;font-size:14.5px}.home ul{padding-left:18px;margin:6px 0 0}
+.tabs{display:flex;gap:6px;margin-bottom:12px;position:relative;z-index:2}.tabs a{flex:1;text-align:center;padding:8px 6px;border-radius:14px;background:rgba(6,38,59,.35);color:#fff;text-decoration:none;font-weight:700;font-size:14px}.tabs a.on{background:#06263b}
+.bite{background:linear-gradient(135deg,rgba(16,185,129,.22),rgba(6,182,212,.12));border-color:#34d39955}.gauge{display:flex;align-items:center;gap:14px}
+.ring{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:26px;flex:none}
+.hb{display:flex;align-items:flex-end;gap:2px;height:70px;margin-top:10px}.hb i{flex:1;border-radius:3px 3px 0 0;position:relative;min-height:3px}.hb i.now{outline:2px solid #fde68a}
+.hx{display:flex;justify-content:space-between;font-size:10px;color:#7dd3fc;margin-top:3px}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chips span{background:rgba(255,255,255,.1);border-radius:10px;padding:3px 8px;font-size:12.5px}
+
+.barns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bb{border:1px solid #fcd34d66;background:linear-gradient(135deg,rgba(146,64,14,.55),rgba(120,53,15,.35));color:#fff;border-radius:18px;padding:14px 10px;font-size:16px;font-weight:800;text-align:left}
+.bb small{display:block;font-size:12px;font-weight:600;color:#fde68a;margin-top:3px}
+.wd{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.wdd{background:rgba(255,255,255,.07);border-radius:14px;padding:10px}
+.wdd b{font-size:16px}.wdd .big{font-size:24px;font-weight:900}.wdd .s{font-size:12.5px}.mini{display:flex;align-items:flex-end;gap:1px;height:30px;margin-top:6px}.mini i{flex:1;border-radius:2px 2px 0 0}
+.stay{font-size:12.5px;margin-top:6px;color:#fde68a}
+.sheet{position:fixed;inset:0;background:rgba(2,12,20,.7);display:none;align-items:flex-end;z-index:50}.sheet.on{display:flex}
+.sh-in{background:#0b3047;width:100%;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.x{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:50%;width:34px;height:34px;font-size:16px}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.mnav button{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:10px;width:40px;height:34px;font-size:20px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cg .h{font-size:11px;text-align:center;color:#7dd3fc}
+.cg .d{min-height:52px;border-radius:10px;background:rgba(255,255,255,.06);padding:4px;font-size:12px;position:relative}
+.cg .d.past{opacity:.35}.cg .d.today{outline:2px solid #fde68a}.cg .d.wkend{background:rgba(255,255,255,.1)}
+.cg .d.bk{background:linear-gradient(135deg,#b45309,#92400e)}.cg .d .who{display:block;font-size:10px;line-height:1.1;margin-top:3px;color:#fde68a;overflow:hidden}
+.cg .d.selS,.cg .d.selR{background:#0e7490;outline:2px solid #67e8f9}
+.frm{display:grid;grid-template-columns:1fr 92px;gap:8px}.frm input{width:100%;min-width:0;padding:12px;border-radius:12px;border:1px solid #1e5a7a;background:#06263b;color:#fff;font-size:16px}.frm input:last-child{grid-column:1/-1}
+.bk{width:100%;margin-top:10px;border:0;border-radius:16px;padding:14px;font-size:17px;font-weight:800;background:linear-gradient(135deg,#fde68a,#fb923c);color:#06263b}
+.bli{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}.bli button{background:rgba(248,113,113,.2);border:0;color:#fecaca;border-radius:8px;padding:4px 8px}
+.script{font-size:14px;line-height:1.5;color:#e0f2fe;display:none}.script.on{display:block}
+small{color:#7dd3fc}
+</style></head><body>
+<div id="gate" style="position:fixed;inset:0;z-index:99;background:#06263b;display:grid;place-items:center"><form id="gf" style="text-align:center;color:#fff;font-family:system-ui"><div style="font-size:48px">🎣</div><h2 style="margin:6px 0">Port O'Connor</h2><p style="color:#7dd3fc">Enter the family code</p><input id="gp" type="password" inputmode="numeric" autocomplete="off" style="font-size:24px;padding:12px;border-radius:12px;border:0;width:170px;text-align:center"><br><button style="margin-top:12px;padding:12px 28px;border-radius:12px;border:0;background:#fb923c;font-weight:800;font-size:17px">Open</button><p id="ge" style="color:#fca5a5"></p></form></div>
+<script>(()=>{const H='bd2558c964022bad9c4f212d67085ef52e02c6cf04e091f71d7f671587d9e7b9',g=document.getElementById('gate');if(localStorage.getItem('poc.ok')===H){g.remove();return;}document.getElementById('gf').onsubmit=async e=>{e.preventDefault();const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('poc:'+document.getElementById('gp').value));const h=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');if(h===H){localStorage.setItem('poc.ok',h);g.remove();}else document.getElementById('ge').textContent='Not quite. Ask Nathan for the code.';};})();</script>
+
+<div class="sky"><div class="sun"></div>
+  <div class="kick" id="kick">Live</div><h1 id="h1">…</h1><div class="sub" id="sub">Checking the water…</div>
+  <div class="waves">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 60 Q150 20 300 60 T600 60 T900 60 T1200 60 V120 H0Z" fill="#0b4f73"/></svg>
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 Q150 40 300 70 T600 70 T900 70 T1200 70 V120 H0Z" fill="#0a3f5e"/></svg>
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 85 Q150 60 300 85 T600 85 T900 85 T1200 85 V120 H0Z" fill="#06263b"/></svg>
+  </div></div>
+<main>
+  <button class="play" id="play" style="display:none"><span class="bars"><i></i><i></i><i></i><i></i></span><span id="pl">Play your beach briefing</span></button>
+  
+  <audio id="au" preload="auto"></audio>
+  <div class="barns"><button class="bb" data-b="les">🏠 Les's barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 Natalie's barn<small id="bs_natalie">…</small></button></div>
+  <div class="c wide" id="wk" style="margin-top:12px"><div class="l">📅 This weekend</div><div id="wkb">Loading the weekend…</div></div>
+  <div class="grid" id="g"></div>
+  <p style="text-align:center;margin-top:16px"><small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></p>
+  <div class="c script" id="script"></div>
+</main>
+<div id="cal" class="sheet"><div class="sh-in">
+  <div style="display:flex;align-items:center;gap:10px"><b id="calT" style="font-size:20px;flex:1"></b><button class="x" id="calX">✕</button></div>
+  <div class="mnav"><button id="mPrev">‹</button><b id="mT"></b><button id="mNext">›</button></div>
+  <div class="cg" id="cg"></div>
+  <div id="sel" class="s" style="margin:8px 0">Tap your first night, then your last night.</div>
+  <div class="frm"><input id="bName" placeholder="Your name"><input id="bG" type="number" min="0" placeholder="Guests"><input id="bN" placeholder="Note (boat, dogs, arriving late…)"></div>
+  <button class="bk" id="bGo">📧 Request these dates</button>
+  <div class="l" style="margin-top:14px">Upcoming stays</div><div id="bl"></div>
+</div></div>
+<script>
+const $ = id => document.getElementById(id);
+const SPOT = 'poc'; let _DP; const DATA = () => _DP || (_DP = fetch('data.json?v=' + Date.now(), { cache: 'no-store' }).then(r => r.json()));
+const clock = hm => { if (!hm) return '–'; const [h, m] = hm.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`; };
+let D;
+async function load(fresh) {
+  D = (await DATA()).beach;
+  document.title = D.place + (D.bite ? ' · fishing' : ' · beach'); $('h1').textContent = D.place; $('kick').textContent = (D.bite ? '🎣 Fishing brief' : '🏖 Beach walk') + ' · live';
+  $('sub').textContent = `${D.forecast && D.forecast[0] ? D.forecast[0].short + ' · ' : ''}updated ${clock(D.at)}`;
+  $('pl').textContent = D.bite ? 'Play your fishing briefing' : 'Play your beach briefing';
+  const w = D.wind || {}, nt = D.next_tide || {}, h = D.home || {};
+  const now = new Date(), nowH = now.getHours() + now.getMinutes() / 60;
+  // tide curve
+  const pts = (D.hourly || []).map(p => ({ x: +p.t.slice(0, 2) + (+p.t.slice(3, 5)) / 60, y: p.v })), ys = pts.map(p => p.y), lo = Math.min(...ys), hi = Math.max(...ys);
+  const X = x => 10 + x / 24 * 380, Y = y => 100 - (y - lo) / ((hi - lo) || 1) * 80;
+  const path = pts.map((p, i) => (i ? 'L' : 'M') + X(p.x).toFixed(1) + ' ' + Y(p.y).toFixed(1)).join(' ');
+  const nowY = pts.length ? Y(pts.reduce((a, b) => Math.abs(b.x - nowH) < Math.abs(a.x - nowH) ? b : a).y) : 50;
+  const hilo = (D.hilo || []).map(t => { const hh = +t.t.slice(11, 13) + (+t.t.slice(14, 16)) / 60; return `<text x="${X(hh)}" y="${t.type === 'H' ? Y(+t.v) - 6 : Y(+t.v) + 14}" text-anchor="middle" font-size="10" fill="#bae6fd">${t.type === 'H' ? 'High' : 'Low'} ${clock(t.t.slice(11, 16))}</text>`; }).join('');
+  $('g').innerHTML = `
+   <div class="c"><div class="l">🌊 ${D.water_name === 'bay' ? 'Bay' : 'Gulf'} water</div><div class="v">${D.water_f ? Math.round(D.water_f) + '°' : '–'}</div><div class="s">${D.met_name} gauge</div></div>
+   <div class="c"><div class="l">🌬 Wind</div><div class="v"><span class="arrow" style="transform:rotate(${(w.deg || 0) + 180}deg)">↑</span> ${w.mph ?? '–'}</div><div class="s">mph from the ${w.dir || '?'}, gusts ${w.gust ?? '–'}</div></div>
+   ${D.bite ? (() => { const b = D.bite, sol = D.solunar || {}, col = v => v >= 80 ? '#22c55e' : v >= 62 ? '#84cc16' : v >= 45 ? '#facc15' : '#f97316';
+       const nh = new Date().getHours(), mx = Math.max(...b.hours.map(o => o.score));
+       const up = (b.best || []).filter(x => x.to > (String(nh).padStart(2, '0') + ':00') || x.to === '00:00');
+       return `<div class="c wide bite"><div class="l">🎣 Bite outlook · solunar + tide + wind + barometer</div>
+         <div class="gauge" style="margin-top:8px"><div class="ring" style="background:conic-gradient(${col(b.now.score)} ${b.now.score * 3.6}deg,rgba(255,255,255,.12) 0)"><div style="width:66px;height:66px;border-radius:50%;background:#0b3047;display:grid;place-items:center">${b.now.score}</div></div>
+           <div><div style="font-size:22px;font-weight:900">${b.now.label} now</div><div class="s">${(b.now.why || []).join(' · ') || 'between feeding periods'}</div><div class="s">Today overall: <b>${b.day_label}</b></div></div></div>
+         <div class="hb">${b.hours.map(o => `<i class="${o.h === nh ? 'now' : ''}" title="${o.h}:00 ${o.score}" style="height:${Math.max(4, o.score / mx * 100)}%;background:${col(o.score)}"></i>`).join('')}</div>
+         <div class="hx"><span>12a</span><span>6a</span><span>noon</span><span>6p</span><span>11p</span></div>
+         <div style="margin-top:10px;font-size:15px">${up.length ? '⏰ <b>Next good window:</b> ' + up.slice(0, 2).map(x => clock(x.from) + '–' + clock(x.to)).join(', then ') : "Today's best windows are behind you."}</div>
+         <div class="chips"><span>🌕 ${sol.phase || ''} ${Math.round((sol.illum || 0) * 100)}%</span>${(sol.majors || []).map(m => `<span>⭐ Major ${clock(m)}</span>`).join('')}${(sol.minors || []).map(m => `<span>✦ Minor ${clock(m)}</span>`).join('')}
+           ${D.pressure_mb ? `<span>🧭 ${Math.round(D.pressure_mb)} mb ${D.pressure_trend}${D.pressure_change != null ? ' (' + (D.pressure_change > 0 ? '+' : '') + D.pressure_change + ')' : ''}</span>` : ''}${D.sunrise ? `<span>🌅 ${clock(D.sunrise)} / ${clock(D.sunset)}</span>` : ''}</div></div>`; })() : ''}
+   <div class="c wide"><div class="l">〰 Tide today · ${D.tide_dir || ''}${nt.t ? ' · ' + nt.type + ' at ' + clock(nt.t) : ''}</div>
+     <svg id="tide" viewBox="0 0 400 120"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38bdf8" stop-opacity=".55"/><stop offset="1" stop-color="#38bdf8" stop-opacity="0"/></linearGradient></defs>
+     <path d="${path} L ${X(23)} 110 L ${X(0)} 110 Z" fill="url(#tg)"/><path d="${path}" stroke="#7dd3fc" stroke-width="2.5" fill="none"/>
+     <line x1="${X(nowH)}" y1="8" x2="${X(nowH)}" y2="110" stroke="#fde68a" stroke-dasharray="3 3"/><circle cx="${X(nowH)}" cy="${nowY}" r="6" fill="#fde68a"><animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite"/></circle>
+     <text x="${X(nowH) + 8}" y="16" font-size="11" fill="#fde68a" font-weight="700">you are here</text>${hilo}</svg></div>
+   ${D.surge_ft != null && Math.abs(D.surge_ft) >= .4 ? `<div class="c wide note"><div class="l">✨ Right now</div><div style="font-size:15px;margin-top:4px">The water is <b>${Math.abs(D.surge_ft).toFixed(1)} ft ${D.surge_ft > 0 ? 'above' : 'below'}</b> the tide table: the ${w.dir || ''} wind is ${D.bite ? (D.surge_ft > 0 ? 'pushing extra water in: reds and trout can slide up into the marsh, back lakes and flooded grass edges' : 'pulling water out: fish stack in the guts, channels and drains') : (D.surge_ft > 0 ? 'piling the Gulf onto the island (narrower beach)' : 'pushing water out (more beach)')}.</div></div>` : ''}
+   <div class="c"><div class="l">🌅 Sunset</div><div class="v" style="font-size:24px">${clock(D.sunset)}</div><div class="s">light till ${clock(D.dusk)}</div></div>
+   <div class="c"><div class="l">🌡 Air</div><div class="v">${D.air_f ? Math.round(D.air_f) + '°' : '–'}</div><div class="s">${D.forecast && D.forecast[0] ? 'high ' + D.forecast[0].temp + '°' : ''}</div></div>
+   ${(D.alerts || []).length ? `<div class="c wide" style="border-color:#f87171"><div class="l" style="color:#fca5a5">⚠ Weather Service</div>${D.alerts.join(', ')}</div>` : ''}`;
+  $('foot').textContent = 'NOAA tides & currents · National Weather Service · US Naval Observatory moon data · built by Claude · updated every 30 min';
+  $('script').textContent = D.script || '';
+  
+}
+$('play').onclick = () => { const a = $('au'); if (a.paused) { a.play(); } else { a.pause(); } };
+$('au').onplay = () => { $('play').classList.add('playing'); $('pl').textContent = 'Playing… tap to pause'; };
+$('au').onpause = $('au').onended = () => { $('play').classList.remove('playing'); $('pl').textContent = D && D.bite ? 'Play your fishing briefing' : 'Play your beach briefing'; };
+$('tx').onclick = e => { e.preventDefault(); $('script').classList.toggle('on'); };
+load(false);
+
+// ---------- 📅 weekend + 🏠 barn bookings
+const col2 = v => v >= 80 ? '#22c55e' : v >= 62 ? '#84cc16' : v >= 45 ? '#facc15' : '#f97316';
+let BK = { barns: {}, bookings: [] };
+async function loadBookings() { BK = (await DATA()).bk;
+  const today = new Date().toISOString().slice(0, 10);
+  for (const k of ['les', 'natalie']) { const cur = BK.bookings.filter(b => b.barn === k && b.end >= today).sort((a, b) => a.start.localeCompare(b.start))[0];
+    $('bs_' + k).textContent = !cur ? 'Open · tap to book' : (cur.start <= today ? 'Now: ' + cur.name : 'Next: ' + cur.name + ' ' + fmtD(cur.start)); } }
+const fmtD = s => new Date(s + 'T12:00').toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+async function loadWeekend() {
+  const W = (await DATA()).weekend;
+  $('wkb').innerHTML = '<div class="wd">' + W.days.map(d => { const b = d.bite || {}, mx = Math.max(1, ...(b.hours || [1]));
+    return `<div class="wdd"><b>${d.label}</b><div class="big">${d.wx ? d.wx.hi + '°' : '–'}${d.lo ? '<span style="font-size:14px;opacity:.7"> / ' + d.lo + '°</span>' : ''}</div>
+      <div class="s">${d.wx ? d.wx.short + ' · ' + d.wx.wind + (d.wx.rain ? ' · 💧' + d.wx.rain + '%' : '') : ''}</div>
+      ${b.label ? `<div style="margin-top:6px;font-weight:800;color:${col2(b.day)}">🎣 ${b.label} bite</div><div class="mini">${b.hours.map(v => `<i style="height:${Math.max(6, v / mx * 100)}%;background:${col2(v)}"></i>`).join('')}</div>
+      <div class="s">Best: ${(b.best || []).map(x => clock(x.from) + '–' + clock(x.to)).join(', ')}</div>` : ''}
+      ${d.hilo ? `<div class="s">〰 ${d.hilo.map(x => (x.type === 'H' ? 'Hi ' : 'Lo ') + clock(x.t)).join(' · ')}</div>` : ''}
+      ${d.solunar ? `<div class="s">⭐ ${d.solunar.majors.map(clock).join(' & ')}</div>` : ''}
+      <div class="stay">${d.staying.length ? '🏠 ' + d.staying.map(s => s.name + ' @ ' + s.barn.replace("'s barn", '')).join(', ') : '🏠 Both barns open'}</div></div>`; }).join('') + '</div>';
+}
+// calendar sheet
+let BARN = 'les', MONTH = new Date(), SEL = [];
+const iso = d => new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+function openCal(b) { BARN = b; SEL = []; MONTH = new Date(); MONTH.setDate(1); $('calT').textContent = (BK.barns[b] || b); drawCal(); $('cal').classList.add('on');
+  $('bName').value = localStorage.getItem('poc.name') || ''; }
+function drawCal() {
+  const y = MONTH.getFullYear(), m = MONTH.getMonth(), first = new Date(y, m, 1), days = new Date(y, m + 1, 0).getDate(), today = iso(new Date());
+  $('mT').textContent = first.toLocaleDateString([], { month: 'long', year: 'numeric' });
+  const mine = BK.bookings.filter(b => b.barn === BARN);
+  let h = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(x => `<div class="h">${x}</div>`).join('') + '<div></div>'.repeat(first.getDay());
+  for (let d = 1; d <= days; d++) { const ds = iso(new Date(y, m, d)), b = mine.find(x => x.start <= ds && ds <= x.end), wd = new Date(y, m, d).getDay();
+    const sel = SEL.length === 2 ? (ds >= SEL[0] && ds <= SEL[1]) : SEL[0] === ds;
+    h += `<div class="d ${ds < today ? 'past' : ''} ${ds === today ? 'today' : ''} ${wd === 0 || wd === 6 ? 'wkend' : ''} ${b ? 'bk' : ''} ${sel ? 'selR' : ''}" data-d="${ds}">${d}${b ? `<span class="who">${b.name}</span>` : ''}</div>`; }
+  $('cg').innerHTML = h;
+  $('cg').querySelectorAll('.d').forEach(el => el.onclick = () => { const ds = el.dataset.d; if (ds < today) return;
+    if (mine.some(x => x.start <= ds && ds <= x.end)) { const b = mine.find(x => x.start <= ds && ds <= x.end); $('sel').textContent = `Taken: ${b.name}, ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.note ? ' · ' + b.note : ''}`; return; }
+    SEL = SEL.length !== 1 ? [ds] : (ds < SEL[0] ? [ds, SEL[0]] : [SEL[0], ds]);
+    $('sel').textContent = SEL.length === 1 ? `From ${fmtD(SEL[0])}: now tap your last night (or Book it for one night).` : `${fmtD(SEL[0])} → ${fmtD(SEL[1])}`; drawCal(); });
+  const up = mine.filter(b => b.end >= today).sort((a, b) => a.start.localeCompare(b.start));
+  $('bl').innerHTML = up.map(b => `<div class="bli"><span><b>${b.name}</b> · ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.note ? '<br><small>' + b.note + '</small>' : ''}</span></div>`).join('') || '<div class="s">Nobody booked yet.</div>';
+  $('bl').querySelectorAll('[data-c]').forEach(x => x.onclick = async () => { if (!confirm('Cancel this stay?')) return;
+    const r = await (await fetch('/api/homestead/x/poc/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: x.dataset.c, name: $('bName').value }) })).json();
+    if (!r.ok) return alert(r.error); await loadBookings(); drawCal(); loadWeekend(); });
+}
+$('mPrev').onclick = () => { MONTH.setMonth(MONTH.getMonth() - 1); drawCal(); }; $('mNext').onclick = () => { MONTH.setMonth(MONTH.getMonth() + 1); drawCal(); };
+$('calX').onclick = () => $('cal').classList.remove('on'); $('cal').onclick = e => { if (e.target.id === 'cal') $('cal').classList.remove('on'); };
+document.querySelectorAll('.bb').forEach(b => b.onclick = () => openCal(b.dataset.b));
+$('bGo').onclick = async () => {
+  if (!SEL.length) return alert('Tap your dates first.'); const name = $('bName').value.trim(); if (!name) return alert('Add your name.');
+  localStorage.setItem('poc.name', name);
+  const s = SEL[0], e = SEL[1] || SEL[0], g = +$('bG').value || 0, n = $('bN').value;
+  const sub = `POC BOOKING: ${BARN} ${s} to ${e}`, body = `Name: ${name}
+Guests: ${g}
+Note: ${n}
+
+(Sent from the Port O'Connor page. Please leave the subject line as it is.)`;
+  location.href = 'mailto:n8ilab@gmail.com?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+  $('sel').textContent = '📧 Your email app is opening: just tap Send. The calendar updates here once it is booked (a few minutes).'; };
+loadBookings(); loadWeekend();
+</script></body></html>
