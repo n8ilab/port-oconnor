@@ -87,7 +87,7 @@ small{color:#7dd3fc}
   <div style="text-align:center;margin-top:22px">
     <div style="font-weight:900;letter-spacing:.5px;color:#f97316;font-size:17px">Built by N8</div>
     <svg width="90" height="22" viewBox="0 0 90 22" style="display:block;margin:4px auto"><path d="M4 7 Q15.5 1 27 7 T50 7 T73 7 T86 7" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M4 16 Q15.5 10 27 16 T50 16 T73 16 T86 16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
-    <small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></div>
+    <small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a> · <a href="#" id="a2hs" style="color:#fb923c">📲 add to home screen</a></div>
   <div class="c script" id="script"></div>
 </main>
 <div id="cal" class="sheet"><div class="sh-in">
@@ -250,4 +250,25 @@ async function loadMonth() {
     $('moD').querySelectorAll('[data-bb]').forEach(x => x.onclick = () => openCal(x.dataset.bb, d.date)); });
 }
 loadBookings().then(loadMonth); loadWeekend();
-</script></body></html>
+</script><div id="hs" class="sheet"><div class="sh-in" style="max-width:520px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:10px"><img src="icon-180.png" alt="" style="width:48px;height:48px;border-radius:12px"><b style="font-size:20px;flex:1">Put Port O'Connor on your phone</b><button class="x" id="hsX">✕</button></div>
+  <button class="bk" id="hsI" style="display:none">📲 Install the app</button>
+  <div id="hsIOS" style="margin-top:12px;font-size:15px;line-height:1.6"><b>iPhone</b> (in Safari)<ol style="margin:4px 0 10px;padding-left:22px">
+    <li>Tap the <b>Share</b> button <span style="opacity:.8">(square with an ↑ arrow; on newer iPhones tap <b>•••</b> first)</span></li>
+    <li>Scroll down, tap <b>Add to Home Screen</b></li><li>Tap <b>Add</b></li></ol>
+    <small>Opened from a text? Tap the link so it opens in Safari first.</small></div>
+  <div id="hsAnd" style="margin-top:12px;font-size:15px;line-height:1.6"><b>Android</b> (in Chrome)<ol style="margin:4px 0 10px;padding-left:22px">
+    <li>Tap the <b>⋮</b> menu (top right)</li><li>Tap <b>Add to Home screen</b> or <b>Install app</b></li><li>Tap <b>Install</b> / <b>Add</b></li></ol></div>
+  <small>Enter the family code 2323 one more time the first time you open the app.</small>
+</div></div>
+<script>(() => {
+  const $ = id => document.getElementById(id), standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (standalone) { $('a2hs').style.display = 'none'; return; }
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua), and = /Android/.test(ua);
+  if (ios) $('hsAnd').style.display = 'none'; if (and) $('hsIOS').style.display = 'none';
+  let ev = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); ev = e; $('hsI').style.display = 'block'; });
+  $('hsI').onclick = async () => { if (ev) { ev.prompt(); await ev.userChoice; ev = null; $('hs').classList.remove('on'); } };
+  $('a2hs').onclick = e => { e.preventDefault(); $('hs').classList.add('on'); };
+  $('hsX').onclick = () => $('hs').classList.remove('on'); $('hs').onclick = e => { if (e.target.id === 'hs') $('hs').classList.remove('on'); };
+})();</script>
+</body></html>
