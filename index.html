@@ -264,8 +264,7 @@ loadBookings().then(loadMonth); loadWeekend();
 </div></div>
 <script>(() => {
   const $ = id => document.getElementById(id), standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  $('shr').onclick = e => { e.preventDefault(); const msg = "Port O'Connor: fishing forecast, tides + barn calendar. Family code 2323
-https://n8ilab.github.io/port-oconnor/?v=2";
+  $('shr').onclick = e => { e.preventDefault(); const msg = "Port O'Connor: fishing forecast, tides + barn calendar. Family code 2323 " + String.fromCharCode(10) + "https://n8ilab.github.io/port-oconnor/?v=2";
     location.href = (/iPhone|iPad|iPod|Mac/.test(navigator.userAgent) ? 'sms:&body=' : 'sms:?body=') + encodeURIComponent(msg); };
   if (standalone) { $('a2hs').style.display = 'none'; return; }
   const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua), and = /Android/.test(ua);
