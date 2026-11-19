@@ -55,6 +55,8 @@ main{padding:0 16px 40px;margin-top:-30px;position:relative}
 .mo .d .mn{position:absolute;top:3px;right:3px;font-size:10px}.mo .dots{position:absolute;bottom:4px;left:4px;display:flex;gap:3px}
 .mo .dots i{width:9px;height:9px;border-radius:50%;border:1.5px solid #06263b}.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:#bae6fd;margin-top:8px}
 .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.rms{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.rms label{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;font-size:14px}
+.cg .d.part{background:linear-gradient(135deg,rgba(180,83,9,.7),rgba(11,48,71,.9))}
 small{color:#7dd3fc}
 </style></head><body>
 <div id="gate" style="position:fixed;inset:0;z-index:99;background:#06263b;display:grid;place-items:center"><form id="gf" style="text-align:center;color:#fff;font-family:system-ui"><div style="font-size:48px">🎣</div><h2 style="margin:6px 0">Port O'Connor</h2><p style="color:#7dd3fc">Enter the family code</p><input id="gp" type="password" inputmode="numeric" autocomplete="off" style="font-size:24px;padding:12px;border-radius:12px;border:0;width:170px;text-align:center"><br><button style="margin-top:12px;padding:12px 28px;border-radius:12px;border:0;background:#fb923c;font-weight:800;font-size:17px">Open</button><p id="ge" style="color:#fca5a5"></p></form></div>
@@ -71,13 +73,13 @@ small{color:#7dd3fc}
   <button class="play" id="play" style="display:none"><span class="bars"><i></i><i></i><i></i><i></i></span><span id="pl">Play your beach briefing</span></button>
   
   <audio id="au" preload="auto"></audio>
-  <div class="barns"><button class="bb" data-b="les">🏠 PawPaw's Barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 The Kay's Barn<small id="bs_natalie">…</small></button></div>
+  <div class="barns"><button class="bb" data-b="les">🏠 PawPaw's Barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 Kay's/Creek Barn<small id="bs_natalie">…</small></button></div>
   <div class="c wide" id="wk" style="margin-top:12px"><div class="l">📅 This weekend</div><div id="wkb">Loading the weekend…</div></div>
   <div class="grid" id="g"></div>
   <div class="c wide" id="mon" style="margin-top:12px"><div class="l">🗓 Next 30 days · bite outlook + barns</div>
     <div class="mo" id="mo">Loading…</div>
     <div class="leg"><span><i style="background:#22c55e"></i>Great</span><span><i style="background:#84cc16"></i>Good</span><span><i style="background:#facc15"></i>Fair</span><span><i style="background:#f97316"></i>Slow</span>
-      <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>The Kay's booked</span></div>
+      <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>Kay's/Creek booked</span></div>
     <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. Tap a day for details. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
   <p style="text-align:center;margin-top:16px"><small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></p>
   <div class="c script" id="script"></div>
@@ -87,7 +89,7 @@ small{color:#7dd3fc}
   <div class="mnav"><button id="mPrev">‹</button><b id="mT"></b><button id="mNext">›</button></div>
   <div class="cg" id="cg"></div>
   <div id="sel" class="s" style="margin:8px 0">Tap your first night, then your last night.</div>
-  <div class="frm"><input id="bName" placeholder="Your name"><input id="bG" type="number" min="0" placeholder="Guests"><input id="bN" placeholder="Note (boat, dogs, arriving late…)"></div>
+  <div class="rms" id="rms"></div><div class="frm"><input id="bName" placeholder="Your name"><input id="bG" type="number" min="0" placeholder="Guests"><input id="bW" placeholder="Guest names (who's coming)" style="grid-column:1/-1"><input id="bN" placeholder="Note (boat, dogs, arriving late…)"></div>
   <button class="bk" id="bGo">📧 Request these dates</button>
   <div class="l" style="margin-top:14px">Upcoming stays</div><div id="bl"></div>
 </div></div>
@@ -165,22 +167,26 @@ async function loadWeekend() {
 let BARN = 'les', MONTH = new Date(), SEL = [];
 const iso = d => new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
 function openCal(b) { BARN = b; SEL = []; MONTH = new Date(); MONTH.setDate(1); $('calT').textContent = (BK.barns[b] || b); drawCal(); $('cal').classList.add('on');
-  $('bName').value = localStorage.getItem('poc.name') || ''; }
+  $('bName').value = localStorage.getItem('poc.name') || '';
+  const RR = (BK.rooms || {})[b] || {}; $('rms').innerHTML = Object.keys(RR).length ? '<span class="s" style="width:100%">Which rooms?</span>' + Object.entries(RR).map(([k, v]) => `<label><input type="checkbox" value="${k}"> ${v}</label>`).join('') : ''; }
+const selRooms = () => { const RR = Object.keys((BK.rooms || {})[BARN] || {}); if (!RR.length) return []; const c = [...document.querySelectorAll('#rms input:checked')].map(x => x.value); return c.length ? c : null; };
+const fullBk = l => { const RR = Object.keys((BK.rooms || {})[BARN] || {}); if (!RR.length) return l.length > 0; const u = new Set(l.flatMap(x => x.rooms && x.rooms.length ? x.rooms : RR)); return RR.every(r => u.has(r)); };
+const rmTxt = b => { const RR = (BK.rooms || {})[b.barn]; return RR && b.rooms && b.rooms.length && b.rooms.length < Object.keys(RR).length ? ' (' + b.rooms.map(r => RR[r]).join(', ') + ')' : ''; };
 function drawCal() {
   const y = MONTH.getFullYear(), m = MONTH.getMonth(), first = new Date(y, m, 1), days = new Date(y, m + 1, 0).getDate(), today = iso(new Date());
   $('mT').textContent = first.toLocaleDateString([], { month: 'long', year: 'numeric' });
   const mine = BK.bookings.filter(b => b.barn === BARN);
   let h = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(x => `<div class="h">${x}</div>`).join('') + '<div></div>'.repeat(first.getDay());
-  for (let d = 1; d <= days; d++) { const ds = iso(new Date(y, m, d)), b = mine.find(x => x.start <= ds && ds <= x.end), wd = new Date(y, m, d).getDay();
+  for (let d = 1; d <= days; d++) { const ds = iso(new Date(y, m, d)), b = mine.find(x => x.start <= ds && ds <= x.end), full = fullBk(mine.filter(x => x.start <= ds && ds <= x.end)), wd = new Date(y, m, d).getDay();
     const sel = SEL.length === 2 ? (ds >= SEL[0] && ds <= SEL[1]) : SEL[0] === ds;
-    h += `<div class="d ${ds < today ? 'past' : ''} ${ds === today ? 'today' : ''} ${wd === 0 || wd === 6 ? 'wkend' : ''} ${b ? 'bk' : ''} ${sel ? 'selR' : ''}" data-d="${ds}">${d}${b ? `<span class="who">${b.name}</span>` : ''}</div>`; }
+    h += `<div class="d ${ds < today ? 'past' : ''} ${ds === today ? 'today' : ''} ${wd === 0 || wd === 6 ? 'wkend' : ''} ${b ? (full ? 'bk' : 'part') : ''} ${sel ? 'selR' : ''}" data-d="${ds}">${d}${b ? `<span class="who">${b.name}</span>` : ''}</div>`; }
   $('cg').innerHTML = h;
   $('cg').querySelectorAll('.d').forEach(el => el.onclick = () => { const ds = el.dataset.d; if (ds < today) return;
-    if (mine.some(x => x.start <= ds && ds <= x.end)) { const b = mine.find(x => x.start <= ds && ds <= x.end); $('sel').textContent = `Taken: ${b.name}, ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.note ? ' · ' + b.note : ''}`; return; }
+    if (el.classList.contains('bk')) { const b = mine.find(x => x.start <= ds && ds <= x.end); $('sel').textContent = `Taken: ${b.name}, ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.note ? ' · ' + b.note : ''}`; return; }
     SEL = SEL.length !== 1 ? [ds] : (ds < SEL[0] ? [ds, SEL[0]] : [SEL[0], ds]);
     $('sel').textContent = SEL.length === 1 ? `From ${fmtD(SEL[0])}: now tap your last night (or Book it for one night).` : `${fmtD(SEL[0])} → ${fmtD(SEL[1])}`; drawCal(); });
   const up = mine.filter(b => b.end >= today).sort((a, b) => a.start.localeCompare(b.start));
-  $('bl').innerHTML = up.map(b => `<div class="bli"><span><b>${b.name}</b> · ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.note ? '<br><small>' + b.note + '</small>' : ''}</span></div>`).join('') || '<div class="s">Nobody booked yet.</div>';
+  $('bl').innerHTML = up.map(b => `<div class="bli"><span><b>${b.name}</b>${rmTxt(b)} · ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.who ? '<br><small>👥 ' + b.who + '</small>' : ''}${b.note ? '<br><small>' + b.note + '</small>' : ''}</span></div>`).join('') || '<div class="s">Nobody booked yet.</div>';
   $('bl').querySelectorAll('[data-c]').forEach(x => x.onclick = async () => { if (!confirm('Cancel this stay?')) return;
     const r = await (await fetch('/api/homestead/x/poc/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: x.dataset.c, name: $('bName').value }) })).json();
     if (!r.ok) return alert(r.error); await loadBookings(); drawCal(); loadWeekend(); loadMonth(); });
@@ -190,13 +196,17 @@ $('calX').onclick = () => $('cal').classList.remove('on'); $('cal').onclick = e 
 document.querySelectorAll('.bb').forEach(b => b.onclick = () => openCal(b.dataset.b));
 $('bGo').onclick = async () => {
   if (!SEL.length) return alert('Tap your dates first.'); const name = $('bName').value.trim(); if (!name) return alert('Add your name.');
-  localStorage.setItem('poc.name', name);
-  const s = SEL[0], e = SEL[1] || SEL[0], g = +$('bG').value || 0, n = $('bN').value;
+  localStorage.setItem('poc.name', name); const RM = selRooms(); if (RM === null) return alert('Pick which rooms you need.');
+  const s = SEL[0], e = SEL[1] || SEL[0], g = +$('bG').value || '', n = $('bN').value, RL = RM.map(r => BK.rooms[BARN][r]).join(', ') || 'Whole barn';
   const sub = `POC BOOKING: ${BARN} ${s} to ${e}`, body = `Name: ${name}
-Guests: ${g}
+Rooms: ${RL}
+Number of guests: ${g}
+Guest names: ${$('bW').value}
+Arriving (day/time): 
+Leaving (day/time): 
 Note: ${n}
 
-(Sent from the Port O'Connor page. Please leave the subject line as it is.)`;
+(Fill in anything blank, keep the subject line as it is, then tap Send.)`;
   location.href = 'mailto:n8ilab@gmail.com?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
   $('sel').textContent = '📧 Your email app is opening: just tap Send. The barn owner gets it for approval; it shows on the calendar once approved. (Barn owners: your own requests book right away.)'; };
 
@@ -220,7 +230,7 @@ async function loadMonth() {
     $('moD').innerHTML = `<b>${fmtD(d.date)}: ${d.label || '?'} bite</b>${d.score != null ? ' (' + d.score + ')' : ''} · ${d.phase || ''} ${Math.round((d.illum || 0) * 100)}%`
       + (d.best && d.best.length ? `<br>⏰ Best: ${d.best.map(x => clock(x[0]) + '–' + clock(x[1])).join(', ')}` : '')
       + (d.majors ? `<br>⭐ Majors ${d.majors.map(clock).join(' & ')}` : '') + (d.wx ? `<br>🌤 ${d.wx.hi}° ${d.wx.short} · ${d.wx.wind}` : '')
-      + `<br>🏠 ${bk.length ? bk.map(b => `<span style="color:${BC[b.barn]}">●</span> ${b.name} @ ${(BK.barns[b.barn] || b.barn)}`).join(', ') : 'Both barns open'}`; });
+      + `<br>🏠 ${bk.length ? bk.map(b => `<span style="color:${BC[b.barn]}">●</span> ${b.name} @ ${(BK.barns[b.barn] || b.barn)}${rmTxt(b)}`).join(', ') : 'Both barns open'}`; });
 }
 loadBookings().then(loadMonth); loadWeekend();
 </script></body></html>
