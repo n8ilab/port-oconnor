@@ -59,6 +59,11 @@ main{padding:0 16px 40px;margin-top:-30px;position:relative}
 .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .rms{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.rms label{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;font-size:14px}
 .cg .d.part{background:linear-gradient(135deg,rgba(180,83,9,.7),rgba(11,48,71,.9))}
+.evr{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none}
+.evd{min-width:46px;text-align:center;background:rgba(249,115,22,.18);border-radius:10px;padding:4px 0;font-size:19px;font-weight:900;line-height:1.1}.evd b{display:block;font-size:10px;color:#fb923c;text-transform:uppercase;letter-spacing:.5px}
+.evt{flex:1;min-width:0}.evt b{display:block;font-size:15px;line-height:1.25}.evt small{display:block;margin-top:2px}.evo{color:#7dd3fc;font-size:22px}
+.evs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.evs a{font-size:12px;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 10px}
+.evm{width:100%;margin-top:8px;background:rgba(255,255,255,.08);border:0;color:#7dd3fc;border-radius:10px;padding:9px;font-size:14px}
 .tbtn{position:absolute;z-index:3;top:calc(env(safe-area-inset-top) + 14px);right:14px;display:flex;gap:6px}.tbtn a{background:rgba(6,38,59,.55);color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 11px;font-size:13px;font-weight:700;backdrop-filter:blur(6px)}#hs{align-items:center;padding:16px}#hs .sh-in{border-radius:22px;max-height:86vh}
 small{color:#7dd3fc}
 </style></head><body>
@@ -79,13 +84,17 @@ small{color:#7dd3fc}
   <audio id="au" preload="auto"></audio>
   <div class="barns"><button class="bb" data-b="les">🏠 PawPaw's Barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 Kays/Creek Barn<small id="bs_natalie">…</small></button></div>
   <div class="c wide" id="wk" style="margin-top:12px"><div class="l">📅 This weekend</div><div id="wkb">Loading the weekend…</div></div>
+  <div class="c wide" id="ev" style="margin-top:12px"><div class="l">🎉 What's happening in POC</div><div id="evl">Loading…</div>
+    <div class="evs"><a href="https://business.portoconnorchamber.com/events/calendar" target="_blank" rel="noopener">Chamber calendar</a><a href="https://portoconnorchamber.com/local-events" target="_blank" rel="noopener">Big events</a>
+      <a href="https://www.facebook.com/search/top?q=Port%20O%27Connor%20Volunteer%20Fire%20Department" target="_blank" rel="noopener">🚒 Fire Dept</a>
+      <a href="mailto:n8ilab@gmail.com?subject=POC%20EVENT%3A%20&body=What%3A%20%0AWhen%20(date%20and%20time)%3A%20%0AWhere%3A%20%0ALink%20(Facebook%20post%20or%20flyer)%3A%20%0A">＋ Add an event</a></div></div>
   <div class="grid" id="g"></div>
   <div class="c wide" id="mon" style="margin-top:12px"><div style="display:flex;align-items:center;gap:8px"><div class="l" style="flex:1">🗓 <span id="moT">This month</span> · bite + barns</div>
       <button class="mb" id="moP" aria-label="Previous month">‹</button><button class="mb" id="moN" aria-label="Next month">›</button></div>
     <div class="mo" id="mo">Loading…</div>
     <div class="leg"><span><i style="background:#22c55e"></i>Great</span><span><i style="background:#84cc16"></i>Good</span><span><i style="background:#facc15"></i>Fair</span><span><i style="background:#f97316"></i>Slow</span>
       <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>Kays/Creek booked</span></div>
-    <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. Tap a day for details and to book it. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
+    <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. 🎉 = local event. Tap a day for details and to book it. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
   <div style="text-align:center;margin-top:22px">
     <div style="font-weight:900;letter-spacing:.5px;color:#f97316;font-size:17px">Built by N8</div>
     <svg width="90" height="22" viewBox="0 0 90 22" style="display:block;margin:4px auto"><path d="M4 7 Q15.5 1 27 7 T50 7 T73 7 T86 7" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M4 16 Q15.5 10 27 16 T50 16 T73 16 T86 16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
@@ -139,8 +148,6 @@ async function load(fresh) {
      <line x1="${X(nowH)}" y1="8" x2="${X(nowH)}" y2="110" stroke="#fde68a" stroke-dasharray="3 3"/><circle cx="${X(nowH)}" cy="${nowY}" r="6" fill="#fde68a"><animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite"/></circle>
      <text x="${X(nowH) + 8}" y="16" font-size="11" fill="#fde68a" font-weight="700">you are here</text>${hilo}</svg></div>
    ${D.surge_ft != null && Math.abs(D.surge_ft) >= .4 ? `<div class="c wide note"><div class="l">✨ Right now</div><div style="font-size:15px;margin-top:4px">The water is <b>${Math.abs(D.surge_ft).toFixed(1)} ft ${D.surge_ft > 0 ? 'above' : 'below'}</b> the tide table: the ${w.dir || ''} wind is ${D.bite ? (D.surge_ft > 0 ? 'pushing extra water in: reds and trout can slide up into the marsh, back lakes and flooded grass edges' : 'pulling water out: fish stack in the guts, channels and drains') : (D.surge_ft > 0 ? 'piling the Gulf onto the island (narrower beach)' : 'pushing water out (more beach)')}.</div></div>` : ''}
-   <div class="c"><div class="l">🌅 Sunset</div><div class="v" style="font-size:24px">${clock(D.sunset)}</div><div class="s">light till ${clock(D.dusk)}</div></div>
-   <div class="c"><div class="l">🌡 Air</div><div class="v">${D.air_f ? Math.round(D.air_f) + '°' : '–'}</div><div class="s">${D.forecast && D.forecast[0] ? 'high ' + D.forecast[0].temp + '°' : ''}</div></div>
    ${(D.alerts || []).length ? `<div class="c wide" style="border-color:#f87171"><div class="l" style="color:#fca5a5">⚠ Weather Service</div>${D.alerts.join(', ')}</div>` : ''}`;
   $('foot').textContent = 'NOAA tides & currents · National Weather Service · US Naval Observatory moon data · updated every 30 min';
   $('script').textContent = D.script || '';
@@ -152,6 +159,20 @@ $('au').onpause = $('au').onended = () => { $('play').classList.remove('playing'
 $('tx').onclick = e => { e.preventDefault(); $('script').classList.toggle('on'); };
 load(false);
 
+// ---------- 🎉 what's happening
+const EVP = DATA().then(d => d.events || { events: [] }).catch(() => ({ events: [] }));
+const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const evOn = (E, ds) => ((E && E.events) || []).filter(e => e.start <= ds && ds <= (e.end || e.start));
+async function loadEvents() {
+  const E = await EVP, ev = (E && E.events) || [], N = 6;
+  const row = e => `<a class="evr" href="${esc(e.url)}" target="_blank" rel="noopener"><span class="evd"><b>${new Date(e.start + 'T12:00').toLocaleDateString([], { month: 'short' })}</b>${+e.start.slice(8)}</span>`
+    + `<span class="evt"><b>${e.emoji || '🎉'} ${esc(e.title)}</b><small>${[new Date(e.start + 'T12:00').toLocaleDateString([], { weekday: 'short' }) + (e.end && e.end !== e.start ? '–' + new Date(e.end + 'T12:00').toLocaleDateString([], { weekday: 'short' }) : ''), e.time, e.place].filter(Boolean).map(esc).join(' · ')}</small></span><span class="evo">›</span></a>`;
+  $('evl').innerHTML = ev.length ? ev.slice(0, N).map(row).join('') + (ev.length > N ? `<div id="evmore" style="display:none">${ev.slice(N).map(row).join('')}</div><button class="evm" id="evmb">Show all ${ev.length} events</button>` : '')
+    : '<div class="s">Nothing posted for the next few weeks yet.</div>';
+  if ($('evmb')) $('evmb').onclick = () => { $('evmore').style.display = 'block'; $('evmb').remove(); };
+}
+loadEvents();
+
 // ---------- 📅 weekend + 🏠 barn bookings
 const col2 = v => v >= 80 ? '#22c55e' : v >= 62 ? '#84cc16' : v >= 45 ? '#facc15' : '#f97316';
 let BK = { barns: {}, bookings: [] };
@@ -162,6 +183,7 @@ async function loadBookings() { BK = (await DATA()).bk;
 const fmtD = s => new Date(s + 'T12:00').toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
 async function loadWeekend() {
   const W = (await DATA()).weekend;
+  const E = await EVP;
   $('wkb').innerHTML = '<div class="wd">' + W.days.map(d => { const b = d.bite || {}, mx = Math.max(1, ...(b.hours || [1]));
     return `<div class="wdd"><b>${d.label}</b><div class="big">${d.wx ? d.wx.hi + '°' : '–'}${d.lo ? '<span style="font-size:14px;opacity:.7"> / ' + d.lo + '°</span>' : ''}</div>
       <div class="s">${d.wx ? d.wx.short + ' · ' + d.wx.wind + (d.wx.rain ? ' · 💧' + d.wx.rain + '%' : '') : ''}</div>
@@ -169,6 +191,7 @@ async function loadWeekend() {
       <div class="s">Best: ${(b.best || []).map(x => clock(x.from) + '–' + clock(x.to)).join(', ')}</div>` : ''}
       ${d.hilo ? `<div class="s">〰 ${d.hilo.map(x => (x.type === 'H' ? 'Hi ' : 'Lo ') + clock(x.t)).join(' · ')}</div>` : ''}
       ${d.solunar ? `<div class="s">⭐ ${d.solunar.majors.map(clock).join(' & ')}</div>` : ''}
+      ${evOn(E, d.date).length ? `<div class="s" style="color:#fdba74;margin-top:4px">🎉 ${evOn(E, d.date).slice(0, 2).map(e => esc(e.title)).join(', ')}${evOn(E, d.date).length > 2 ? ' +' + (evOn(E, d.date).length - 2) + ' more' : ''}</div>` : ''}
       <div class="stay">${d.staying.length ? '🏠 ' + d.staying.map(s => s.name + ' @ ' + s.barn.replace(/ barn$/i, '')).join(', ') : '🏠 Both barns open'}</div></div>`; }).join('') + '</div>';
 }
 // calendar sheet
@@ -226,6 +249,7 @@ let MI = 0;
 $('moP').onclick = () => { MI--; loadMonth(); }; $('moN').onclick = () => { MI++; loadMonth(); };
 async function loadMonth() {
   if (!MO) { const M = (await DATA()).month; MO = M; }
+  const E = await EVP;
   const all = MO.days || []; if (!all.length) { $('mo').textContent = 'No outlook yet.'; return; }
   const months = [...new Set(all.map(d => d.date.slice(0, 7)))]; MI = Math.max(0, Math.min(MI, months.length - 1));
   const days = all.filter(d => d.date.startsWith(months[MI])), todayS = iso(new Date());
@@ -237,7 +261,7 @@ async function loadMonth() {
   for (const d of days) { const dt = new Date(d.date + 'T12:00'), wd = dt.getDay();
     const bk = (BK.bookings || []).filter(b => b.start <= d.date && d.date <= b.end);
     const moon = d.illum >= .9 ? '🌕' : d.illum <= .1 ? '🌑' : '';
-    h += `<div class="d ${wd === 0 || wd === 6 ? 'we' : ''} ${d.date < todayS ? 'past' : ''} ${d.date === todayS ? 'on' : ''}" data-d="${d.date}" style="background:${d.score != null ? col2(d.score) : 'rgba(255,255,255,.1)'}">${dt.getDate()}<span class="sc">${d.score >= top && d.date >= todayS ? '⭐ ' : ''}${d.label || ''}</span><span class="mn">${moon}</span>
+    h += `<div class="d ${wd === 0 || wd === 6 ? 'we' : ''} ${d.date < todayS ? 'past' : ''} ${d.date === todayS ? 'on' : ''}" data-d="${d.date}" style="background:${d.score != null ? col2(d.score) : 'rgba(255,255,255,.1)'}">${dt.getDate()}<span class="sc">${d.score >= top && d.date >= todayS ? '⭐ ' : ''}${d.label || ''}</span><span class="mn">${evOn(E, d.date).length ? '🎉' : moon}</span>
       <span class="dots">${bk.map(b => `<i style="background:${BC[b.barn] || '#fff'}"></i>`).join('')}</span></div>`; }
   $('mo').innerHTML = h;
   $('mo').querySelectorAll('.d').forEach(el => el.onclick = () => { $('mo').querySelectorAll('.d.on').forEach(x => x.classList.remove('on')); el.classList.add('on');
@@ -245,6 +269,7 @@ async function loadMonth() {
     $('moD').innerHTML = `<b>${fmtD(d.date)}: ${d.label || '?'} bite</b>${d.score != null ? ' (' + d.score + ')' : ''} · ${d.phase || ''} ${Math.round((d.illum || 0) * 100)}%`
       + (d.best && d.best.length ? `<br>⏰ Best: ${d.best.map(x => clock(x[0]) + '–' + clock(x[1])).join(', ')}` : '')
       + (d.majors ? `<br>⭐ Majors ${d.majors.map(clock).join(' & ')}` : '') + (d.wx ? `<br>🌤 ${d.wx.hi}° ${d.wx.short} · ${d.wx.wind}` : '')
+      + (evOn(E, d.date).length ? '<br>🎉 ' + evOn(E, d.date).map(e => `<a href="${esc(e.url)}" target="_blank" rel="noopener" style="color:#fdba74">${esc(e.title)}</a>`).join(', ') : '')
       + `<br>🏠 ${bk.length ? bk.map(b => `<span style="color:${BC[b.barn]}">●</span> ${b.name} @ ${(BK.barns[b.barn] || b.barn)}${rmTxt(b)}`).join(', ') : 'Both barns open'}`
       + (d.date >= todayS ? '<div class="mbk">' + Object.keys(BK.barns || {}).map(k => { const RR = Object.keys((BK.rooms || {})[k] || {}), l = bk.filter(b => b.barn === k);
           const full = RR.length ? RR.every(r => l.some(b => !(b.rooms && b.rooms.length) || b.rooms.includes(r))) : l.length > 0;
