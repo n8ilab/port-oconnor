@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><link rel="icon" href="favicon.ico" sizes="32x32"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><link rel="manifest" href="manifest.json"><meta name="apple-mobile-web-app-title" content="Port O&#39;Connor"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="application-name" content="Port O&#39;Connor"><meta property="og:title" content="Port O&#39;Connor"><meta property="og:site_name" content="Port O&#39;Connor"><meta property="og:description" content="Fishing brief, tides and the barn calendar."><meta property="og:type" content="website"><meta property="og:url" content="https://n8ilab.github.io/port-oconnor/"><meta property="og:image" content="https://n8ilab.github.io/port-oconnor/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Port O'Connor</title><meta name="theme-color" content="#0b3d5c">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,"Segoe UI",system-ui,sans-serif;color:#f0f9ff;background:#06263b;min-height:100vh;overflow-x:hidden}
@@ -102,7 +102,7 @@ const clock = hm => { if (!hm) return '–'; const [h, m] = hm.split(':').map(Nu
 let D;
 async function load(fresh) {
   D = (await DATA()).beach;
-  document.title = D.place + (D.bite ? ' · fishing' : ' · beach'); $('h1').textContent = D.place; $('kick').textContent = (D.bite ? '🎣 Fishing brief' : '🏖 Beach walk') + ' · live';
+  document.title = "Port O'Connor"; $('h1').textContent = D.place; $('kick').textContent = (D.bite ? '🎣 Fishing brief' : '🏖 Beach walk') + ' · live';
   $('sub').textContent = `${D.forecast && D.forecast[0] ? D.forecast[0].short + ' · ' : ''}updated ${clock(D.at)}`;
   $('pl').textContent = D.bite ? 'Play your fishing briefing' : 'Play your beach briefing';
   const w = D.wind || {}, nt = D.next_tide || {}, h = D.home || {};
