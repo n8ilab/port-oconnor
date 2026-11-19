@@ -54,6 +54,7 @@ main{padding:0 16px 40px;margin-top:-30px;position:relative}
 .mo .d.we{outline:2px solid rgba(255,255,255,.55)}.mo .d.on{outline:3px solid #fde68a}.mo .d .sc{display:block;font-size:10px;font-weight:700;opacity:.8}
 .mo .d .mn{position:absolute;top:3px;right:3px;font-size:10px}.mo .dots{position:absolute;bottom:4px;left:4px;display:flex;gap:3px}
 .mo .dots i{width:9px;height:9px;border-radius:50%;border:1.5px solid #06263b}.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:#bae6fd;margin-top:8px}
+.mo .d.past{opacity:.38}.mb{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:10px;width:40px;height:34px;font-size:20px}.mb:disabled{opacity:.3}
 .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .rms{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.rms label{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;font-size:14px}
 .cg .d.part{background:linear-gradient(135deg,rgba(180,83,9,.7),rgba(11,48,71,.9))}
@@ -76,7 +77,8 @@ small{color:#7dd3fc}
   <div class="barns"><button class="bb" data-b="les">🏠 PawPaw's Barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 Kay's/Creek Barn<small id="bs_natalie">…</small></button></div>
   <div class="c wide" id="wk" style="margin-top:12px"><div class="l">📅 This weekend</div><div id="wkb">Loading the weekend…</div></div>
   <div class="grid" id="g"></div>
-  <div class="c wide" id="mon" style="margin-top:12px"><div class="l">🗓 Next 30 days · bite outlook + barns</div>
+  <div class="c wide" id="mon" style="margin-top:12px"><div style="display:flex;align-items:center;gap:8px"><div class="l" style="flex:1">🗓 <span id="moT">This month</span> · bite + barns</div>
+      <button class="mb" id="moP" aria-label="Previous month">‹</button><button class="mb" id="moN" aria-label="Next month">›</button></div>
     <div class="mo" id="mo">Loading…</div>
     <div class="leg"><span><i style="background:#22c55e"></i>Great</span><span><i style="background:#84cc16"></i>Good</span><span><i style="background:#facc15"></i>Fair</span><span><i style="background:#f97316"></i>Slow</span>
       <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>Kay's/Creek booked</span></div>
@@ -213,16 +215,22 @@ Note: ${n}
 // ---------- 🗓 30-day bite outlook + barn dots
 const BC = { les: '#f59e0b', natalie: '#a78bfa' };
 let MO = null;
+let MI = 0;
+$('moP').onclick = () => { MI--; loadMonth(); }; $('moN').onclick = () => { MI++; loadMonth(); };
 async function loadMonth() {
   if (!MO) { const M = (await DATA()).month; MO = M; }
-  const days = MO.days || []; if (!days.length) { $('mo').textContent = 'No outlook yet.'; return; }
-  const top = days.map(d => d.score || 0).sort((a, b) => b - a)[4] || 999;
+  const all = MO.days || []; if (!all.length) { $('mo').textContent = 'No outlook yet.'; return; }
+  const months = [...new Set(all.map(d => d.date.slice(0, 7)))]; MI = Math.max(0, Math.min(MI, months.length - 1));
+  const days = all.filter(d => d.date.startsWith(months[MI])), todayS = iso(new Date());
+  $('moT').textContent = new Date(months[MI] + '-15T12:00').toLocaleDateString([], { month: 'long', year: 'numeric' });
+  $('moP').disabled = MI === 0; $('moN').disabled = MI === months.length - 1;
+  const top = days.filter(d => d.date >= todayS).map(d => d.score || 0).sort((a, b) => b - a)[4] || 999;
   const first = new Date(days[0].date + 'T12:00');
   let h = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(x => `<div class="h">${x}</div>`).join('') + '<div></div>'.repeat(first.getDay());
   for (const d of days) { const dt = new Date(d.date + 'T12:00'), wd = dt.getDay();
     const bk = (BK.bookings || []).filter(b => b.start <= d.date && d.date <= b.end);
     const moon = d.illum >= .9 ? '🌕' : d.illum <= .1 ? '🌑' : '';
-    h += `<div class="d ${wd === 0 || wd === 6 ? 'we' : ''}" data-d="${d.date}" style="background:${d.score != null ? col2(d.score) : 'rgba(255,255,255,.1)'}">${dt.getDate()}<span class="sc">${d.score >= top ? '⭐ ' : ''}${d.label || ''}</span><span class="mn">${moon}</span>
+    h += `<div class="d ${wd === 0 || wd === 6 ? 'we' : ''} ${d.date < todayS ? 'past' : ''} ${d.date === todayS ? 'on' : ''}" data-d="${d.date}" style="background:${d.score != null ? col2(d.score) : 'rgba(255,255,255,.1)'}">${dt.getDate()}<span class="sc">${d.score >= top && d.date >= todayS ? '⭐ ' : ''}${d.label || ''}</span><span class="mn">${moon}</span>
       <span class="dots">${bk.map(b => `<i style="background:${BC[b.barn] || '#fff'}"></i>`).join('')}</span></div>`; }
   $('mo').innerHTML = h;
   $('mo').querySelectorAll('.d').forEach(el => el.onclick = () => { $('mo').querySelectorAll('.d.on').forEach(x => x.classList.remove('on')); el.classList.add('on');
