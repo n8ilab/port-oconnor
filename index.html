@@ -65,7 +65,7 @@ small{color:#7dd3fc}
   <button class="play" id="play" style="display:none"><span class="bars"><i></i><i></i><i></i><i></i></span><span id="pl">Play your beach briefing</span></button>
   
   <audio id="au" preload="auto"></audio>
-  <div class="barns"><button class="bb" data-b="les">🏠 Les's barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 Natalie's barn<small id="bs_natalie">…</small></button></div>
+  <div class="barns"><button class="bb" data-b="les">🏠 PawPaw's Barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 The Kay's Barn<small id="bs_natalie">…</small></button></div>
   <div class="c wide" id="wk" style="margin-top:12px"><div class="l">📅 This weekend</div><div id="wkb">Loading the weekend…</div></div>
   <div class="grid" id="g"></div>
   <p style="text-align:center;margin-top:16px"><small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></p>
@@ -148,7 +148,7 @@ async function loadWeekend() {
       <div class="s">Best: ${(b.best || []).map(x => clock(x.from) + '–' + clock(x.to)).join(', ')}</div>` : ''}
       ${d.hilo ? `<div class="s">〰 ${d.hilo.map(x => (x.type === 'H' ? 'Hi ' : 'Lo ') + clock(x.t)).join(' · ')}</div>` : ''}
       ${d.solunar ? `<div class="s">⭐ ${d.solunar.majors.map(clock).join(' & ')}</div>` : ''}
-      <div class="stay">${d.staying.length ? '🏠 ' + d.staying.map(s => s.name + ' @ ' + s.barn.replace("'s barn", '')).join(', ') : '🏠 Both barns open'}</div></div>`; }).join('') + '</div>';
+      <div class="stay">${d.staying.length ? '🏠 ' + d.staying.map(s => s.name + ' @ ' + s.barn.replace(/ barn$/i, '')).join(', ') : '🏠 Both barns open'}</div></div>`; }).join('') + '</div>';
 }
 // calendar sheet
 let BARN = 'les', MONTH = new Date(), SEL = [];
