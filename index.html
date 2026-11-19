@@ -49,6 +49,12 @@ main{padding:0 16px 40px;margin-top:-30px;position:relative}
 .bk{width:100%;margin-top:10px;border:0;border-radius:16px;padding:14px;font-size:17px;font-weight:800;background:linear-gradient(135deg,#fde68a,#fb923c);color:#06263b}
 .bli{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}.bli button{background:rgba(248,113,113,.2);border:0;color:#fecaca;border-radius:8px;padding:4px 8px}
 .script{font-size:14px;line-height:1.5;color:#e0f2fe;display:none}.script.on{display:block}
+.mo{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}.mo .h{font-size:11px;text-align:center;color:#7dd3fc}
+.mo .d{min-height:54px;border-radius:10px;padding:4px 3px;font-size:12px;position:relative;color:#06263b;font-weight:800;cursor:pointer}
+.mo .d.we{outline:2px solid rgba(255,255,255,.55)}.mo .d.on{outline:3px solid #fde68a}.mo .d .sc{display:block;font-size:10px;font-weight:700;opacity:.8}
+.mo .d .mn{position:absolute;top:3px;right:3px;font-size:10px}.mo .dots{position:absolute;bottom:4px;left:4px;display:flex;gap:3px}
+.mo .dots i{width:9px;height:9px;border-radius:50%;border:1.5px solid #06263b}.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:#bae6fd;margin-top:8px}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 small{color:#7dd3fc}
 </style></head><body>
 <div id="gate" style="position:fixed;inset:0;z-index:99;background:#06263b;display:grid;place-items:center"><form id="gf" style="text-align:center;color:#fff;font-family:system-ui"><div style="font-size:48px">🎣</div><h2 style="margin:6px 0">Port O'Connor</h2><p style="color:#7dd3fc">Enter the family code</p><input id="gp" type="password" inputmode="numeric" autocomplete="off" style="font-size:24px;padding:12px;border-radius:12px;border:0;width:170px;text-align:center"><br><button style="margin-top:12px;padding:12px 28px;border-radius:12px;border:0;background:#fb923c;font-weight:800;font-size:17px">Open</button><p id="ge" style="color:#fca5a5"></p></form></div>
@@ -68,6 +74,11 @@ small{color:#7dd3fc}
   <div class="barns"><button class="bb" data-b="les">🏠 PawPaw's Barn<small id="bs_les">…</small></button><button class="bb" data-b="natalie">🏠 The Kay's Barn<small id="bs_natalie">…</small></button></div>
   <div class="c wide" id="wk" style="margin-top:12px"><div class="l">📅 This weekend</div><div id="wkb">Loading the weekend…</div></div>
   <div class="grid" id="g"></div>
+  <div class="c wide" id="mon" style="margin-top:12px"><div class="l">🗓 Next 30 days · bite outlook + barns</div>
+    <div class="mo" id="mo">Loading…</div>
+    <div class="leg"><span><i style="background:#22c55e"></i>Great</span><span><i style="background:#84cc16"></i>Good</span><span><i style="background:#facc15"></i>Fair</span><span><i style="background:#f97316"></i>Slow</span>
+      <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>The Kay's booked</span></div>
+    <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. Tap a day for details. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
   <p style="text-align:center;margin-top:16px"><small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></p>
   <div class="c script" id="script"></div>
 </main>
@@ -172,7 +183,7 @@ function drawCal() {
   $('bl').innerHTML = up.map(b => `<div class="bli"><span><b>${b.name}</b> · ${fmtD(b.start)} → ${fmtD(b.end)}${b.guests ? ' · ' + b.guests + ' guests' : ''}${b.note ? '<br><small>' + b.note + '</small>' : ''}</span></div>`).join('') || '<div class="s">Nobody booked yet.</div>';
   $('bl').querySelectorAll('[data-c]').forEach(x => x.onclick = async () => { if (!confirm('Cancel this stay?')) return;
     const r = await (await fetch('/api/homestead/x/poc/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: x.dataset.c, name: $('bName').value }) })).json();
-    if (!r.ok) return alert(r.error); await loadBookings(); drawCal(); loadWeekend(); });
+    if (!r.ok) return alert(r.error); await loadBookings(); drawCal(); loadWeekend(); loadMonth(); });
 }
 $('mPrev').onclick = () => { MONTH.setMonth(MONTH.getMonth() - 1); drawCal(); }; $('mNext').onclick = () => { MONTH.setMonth(MONTH.getMonth() + 1); drawCal(); };
 $('calX').onclick = () => $('cal').classList.remove('on'); $('cal').onclick = e => { if (e.target.id === 'cal') $('cal').classList.remove('on'); };
@@ -188,5 +199,28 @@ Note: ${n}
 (Sent from the Port O'Connor page. Please leave the subject line as it is.)`;
   location.href = 'mailto:n8ilab@gmail.com?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
   $('sel').textContent = '📧 Your email app is opening: just tap Send. The calendar updates here once it is booked (a few minutes).'; };
-loadBookings(); loadWeekend();
+
+// ---------- 🗓 30-day bite outlook + barn dots
+const BC = { les: '#f59e0b', natalie: '#a78bfa' };
+let MO = null;
+async function loadMonth() {
+  if (!MO) { const M = (await DATA()).month; MO = M; }
+  const days = MO.days || []; if (!days.length) { $('mo').textContent = 'No outlook yet.'; return; }
+  const top = days.map(d => d.score || 0).sort((a, b) => b - a)[4] || 999;
+  const first = new Date(days[0].date + 'T12:00');
+  let h = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(x => `<div class="h">${x}</div>`).join('') + '<div></div>'.repeat(first.getDay());
+  for (const d of days) { const dt = new Date(d.date + 'T12:00'), wd = dt.getDay();
+    const bk = (BK.bookings || []).filter(b => b.start <= d.date && d.date <= b.end);
+    const moon = d.illum >= .9 ? '🌕' : d.illum <= .1 ? '🌑' : '';
+    h += `<div class="d ${wd === 0 || wd === 6 ? 'we' : ''}" data-d="${d.date}" style="background:${d.score != null ? col2(d.score) : 'rgba(255,255,255,.1)'}">${dt.getDate()}<span class="sc">${d.score >= top ? '⭐ ' : ''}${d.label || ''}</span><span class="mn">${moon}</span>
+      <span class="dots">${bk.map(b => `<i style="background:${BC[b.barn] || '#fff'}"></i>`).join('')}</span></div>`; }
+  $('mo').innerHTML = h;
+  $('mo').querySelectorAll('.d').forEach(el => el.onclick = () => { $('mo').querySelectorAll('.d.on').forEach(x => x.classList.remove('on')); el.classList.add('on');
+    const d = days.find(x => x.date === el.dataset.d), bk = (BK.bookings || []).filter(b => b.start <= d.date && d.date <= b.end);
+    $('moD').innerHTML = `<b>${fmtD(d.date)}: ${d.label || '?'} bite</b>${d.score != null ? ' (' + d.score + ')' : ''} · ${d.phase || ''} ${Math.round((d.illum || 0) * 100)}%`
+      + (d.best && d.best.length ? `<br>⏰ Best: ${d.best.map(x => clock(x[0]) + '–' + clock(x[1])).join(', ')}` : '')
+      + (d.majors ? `<br>⭐ Majors ${d.majors.map(clock).join(' & ')}` : '') + (d.wx ? `<br>🌤 ${d.wx.hi}° ${d.wx.short} · ${d.wx.wind}` : '')
+      + `<br>🏠 ${bk.length ? bk.map(b => `<span style="color:${BC[b.barn]}">●</span> ${b.name} @ ${(BK.barns[b.barn] || b.barn)}`).join(', ') : 'Both barns open'}`; });
+}
+loadBookings().then(loadMonth); loadWeekend();
 </script></body></html>
