@@ -83,7 +83,10 @@ small{color:#7dd3fc}
     <div class="leg"><span><i style="background:#22c55e"></i>Great</span><span><i style="background:#84cc16"></i>Good</span><span><i style="background:#facc15"></i>Fair</span><span><i style="background:#f97316"></i>Slow</span>
       <span><i style="background:#f59e0b;border:1.5px solid #fff"></i>PawPaw's booked</span><span><i style="background:#a78bfa;border:1.5px solid #fff"></i>Kay's/Creek booked</span></div>
     <div class="s" id="moD" style="margin-top:8px">⭐ = the 5 best days this month. Tap a day for details. Moon + tides set the score; wind only counts for the first week (forecast range).</div></div>
-  <p style="text-align:center;margin-top:16px"><small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></p>
+  <div style="text-align:center;margin-top:22px">
+    <div style="font-weight:900;letter-spacing:.5px;color:#f97316;font-size:17px">Built by N8</div>
+    <svg width="90" height="22" viewBox="0 0 90 22" style="display:block;margin:4px auto"><path d="M4 7 Q15.5 1 27 7 T50 7 T73 7 T86 7" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M4 16 Q15.5 10 27 16 T50 16 T73 16 T86 16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <small id="foot"></small> · <a href="#" id="tx" style="color:#7dd3fc">show the words</a></div>
   <div class="c script" id="script"></div>
 </main>
 <div id="cal" class="sheet"><div class="sh-in">
@@ -136,7 +139,7 @@ async function load(fresh) {
    <div class="c"><div class="l">🌅 Sunset</div><div class="v" style="font-size:24px">${clock(D.sunset)}</div><div class="s">light till ${clock(D.dusk)}</div></div>
    <div class="c"><div class="l">🌡 Air</div><div class="v">${D.air_f ? Math.round(D.air_f) + '°' : '–'}</div><div class="s">${D.forecast && D.forecast[0] ? 'high ' + D.forecast[0].temp + '°' : ''}</div></div>
    ${(D.alerts || []).length ? `<div class="c wide" style="border-color:#f87171"><div class="l" style="color:#fca5a5">⚠ Weather Service</div>${D.alerts.join(', ')}</div>` : ''}`;
-  $('foot').textContent = 'NOAA tides & currents · National Weather Service · US Naval Observatory moon data · built by Claude · updated every 30 min';
+  $('foot').textContent = 'NOAA tides & currents · National Weather Service · US Naval Observatory moon data · updated every 30 min';
   $('script').textContent = D.script || '';
   
 }
